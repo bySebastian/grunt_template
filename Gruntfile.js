@@ -1,6 +1,5 @@
 module.exports = function(grunt){
 
-	require('time-grunt')(grunt); // shows time spent on tasks 
 	require('load-grunt-tasks')(grunt); // loading all grunt modules base on package.json
 	
 	grunt.initConfig({
@@ -15,7 +14,7 @@ module.exports = function(grunt){
 		},
 
 		compass: {
-			dist: {
+			production: {
 				options: {
 					sassDir: 'assets/sass',
 					cssDir: 'build/assets/css',
@@ -65,7 +64,7 @@ module.exports = function(grunt){
 		},
 
 		uglify: {
-			dist: {
+			production: {
 				files: {
 					'build/assets/js/app.min.js': [
 						'assets/js/vender/jquery.js',
@@ -76,7 +75,7 @@ module.exports = function(grunt){
 		},
 
 		cssmin: {
-			dist: {
+			production: {
 				expand: true,
 				cwd: 'assets/css',
 				src: ['*.css'],
@@ -101,7 +100,7 @@ module.exports = function(grunt){
 		},
 
 		sshconfig: {
-			dist: {
+			production: {
 				host: 'someserver.com',
 				username: 'someuser',
 				agent: process.env.SSH_AUTH_SOCK
@@ -119,33 +118,58 @@ module.exports = function(grunt){
 				command: [
 					'cd /home/someuser/app',
 					'git pull origin master'
-					'npm install'
-					'forever stop server.js'
-					'forever start server.js'
-					'forever list'
 				].join('&&'),
 				options: {
 					config: 'staging'
 				}
 			},
 
-			dist: {
+			production: {
 				command: [
 					'cd /home/someuser/app',
 					'git pull origin master'
-					'npm install'
-					'forever stop server.js'
-					'forever start server.js'
-					'forever list'
 				].join('&&'),
 				options: {
-					config: 'dist'
+					config: 'production'
 				}
 			}
 			
-		}
+		},
 
-		express:{
+		deployments: {
+			options: {
+				//
+			},
+			"local": {
+		      "title": "Local",
+		      "database": "local_db_name",
+		      "user": "local_db_username",
+		      "pass": "local_db_password",
+		      "host": "local_db_host",
+		      "url": "local_db_url"
+		      // note that the `local` target does not have an "ssh_host"
+		    },
+		    "staging": {
+		      "title": "Stage",
+		      "database": "stage_db_name",
+		      "user": "stage_db_username",
+		      "pass": "stage_db_password",
+		      "host": "stage_db_host",
+		      "url": "stage_db_url",
+		      "ssh_host": "ssh_user@ssh_host"
+		    },
+		    "production": {
+		      "title": "Production",
+		      "database": "production_db_name",
+		      "user": "production_db_username",
+		      "pass": "production_db_password",
+		      "host": "production_db_host",
+		      "url": "production_db_url",
+		      "ssh_host": "ssh_user@ssh_host"
+		    }
+		},
+
+		express:{ // live browser reload
 			all:{
 				options:{
 					port: 9000,
@@ -166,12 +190,12 @@ module.exports = function(grunt){
 	grunt.loadNpmTasks('grunt-contrib-cssmin');
 	grunt.loadNpmTasks('grunt-contrib-watch');
 	grunt.loadNpmTasks('grunt-express');
-	grunt.loadNpmTasks('grunt-ftp-deploy');
+	grunt.loadNpmTasks('grunt-deployments');
 	*/
 
 	// == TASKS ==
 	grunt.registerTask('dev',['watch']);
-	grunt.registerTask('staging',['clean:build','compass:dist','sshexec:staging']);
-	grunt.registerTask('production',['clean:build','compass:dist','cssmin:dist','uglify:dist','sshexec:dist']);
+	grunt.registerTask('staging',['clean:build','compass:production','sshexec:staging']);
+	grunt.registerTask('production',['clean:build','compass:production','cssmin:production','uglify:production','imagemin:dist','sshexec:production']);
 
 }
