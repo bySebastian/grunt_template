@@ -1,5 +1,5 @@
-grunt_template
-==============
+My first grunt template
+=======================
 
 ## 1. Preparing ##
 
