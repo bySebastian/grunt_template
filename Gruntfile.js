@@ -17,7 +17,7 @@ module.exports = function(grunt){
 			production: {
 				options: {
 					sassDir: 'assets/sass',
-					cssDir: 'build/assets/css',
+					cssDir: 'assets/css',
 					environment: 'production',
 					// require: 'zurb-foundation'
 				}
@@ -25,7 +25,7 @@ module.exports = function(grunt){
 			dev: {
 				options: {
 					sassDir: 'assets/sass',
-					cssDir: 'build/assets/css',
+					cssDir: 'assets/css',
 					envirionment: 'development',
 					// require: 'zurb-foundation'
 				}
@@ -34,8 +34,7 @@ module.exports = function(grunt){
 
 		jshint: {
 			work: [
-				'assets/js/*.js',
-				'Gruntfile.js'
+				'assets/js/*.js'
 			]
 		},
 
@@ -47,16 +46,16 @@ module.exports = function(grunt){
 				files: [
 					{
 						expand: true,
-						cwd: 'build/',
+						cwd: 'assets/images/', // source
 						src: ['**/*.jpg'],
-						dest: 'build/',
+						dest: 'build/assets/images/', // destination
 						ext: '.jpg'
 					},
 					{
 						expand: true,
-						cwd: 'build/',
+						cwd: 'assets/images/',
 						src: ['**/*.png'],
-						dest: 'build/',
+						dest: 'build/assets/images',
 						ext: '.png'
 					}
 				]
@@ -65,10 +64,14 @@ module.exports = function(grunt){
 
 		uglify: {
 			production: {
+				options: {
+					mangle: {
+						except: ['jQuery']
+					}
+				}
 				files: {
-					'build/assets/js/app.min.js': [
-						'assets/js/vender/jquery.js',
-						'assets/js/app.js'
+					'build/assets/js/app.min.js': [ // destination
+						'assets/js/app.js' // src
 					]
 				}
 			}
@@ -77,9 +80,9 @@ module.exports = function(grunt){
 		cssmin: {
 			production: {
 				expand: true,
-				cwd: 'assets/css',
+				cwd: 'assets/css/', // src
 				src: ['*.css'],
-				dest: 'build/assets/css'
+				dest: 'build/assets/css/' // destination
 			}
 		}
 
